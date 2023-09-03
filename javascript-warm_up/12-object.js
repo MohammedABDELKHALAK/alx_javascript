@@ -1,4 +1,4 @@
-let numbers = [4, 8, 15, 16, 23, 42];
+let numbers = [4, 8, 15, 16, 12, 42];
 
 // Find the index of the value 12
 const index = numbers.indexOf(12);
