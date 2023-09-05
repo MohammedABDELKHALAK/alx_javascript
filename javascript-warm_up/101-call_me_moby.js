@@ -1,4 +1,8 @@
-function callMeMoby() {
+function callMeMoby(x, Function) {
+    callMeMoby()
+  }
+
+  function callMeMoby() {
     console.log("Hello, world!");
   }
 
