@@ -1,11 +1,12 @@
-function callMeMoby(x, Function) {
-    callMeMoby()
-  }
+#!/usr/bin/node
 
-  function callMeMoby() {
-    console.log("Hello, world!");
+// Define the callMeMoby function
+function callMeMoby(x, theFunction) {
+    for (let i = 0; i < x; i++) {
+      theFunction();
+    }
   }
-
-  // Export the add function so it can be used in other modules
-module.exports.callMeMoby = callMeMoby;
+  
+  // Export the callMeMoby function to make it visible from outside
+  module.exports.callMeMoby = callMeMoby;
   
