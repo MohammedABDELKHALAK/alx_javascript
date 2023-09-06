@@ -11,10 +11,14 @@ class Square extends BaseSquare {
     if (c === undefined) {
       c = 'X'; // Use 'X' as the default character
     }
+else {
 
     for (let i = 0; i < this.size; i++) {
+        for(let j = 0; j< this.size; j++){
       console.log(c.repeat(this.size));
+        }
     }
+}
   }
 }
 
