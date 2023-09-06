@@ -7,7 +7,7 @@ class Rectangle {
         return 'Rectangle {}';
       }
 
-      else if (!Number.isInteger(w) || !Number.isInteger(h)){
+      else if (!Number.isInteger(w) || !Number.isInteger(h) || w === undefined || h === undefined){
         return{};
       }
       
