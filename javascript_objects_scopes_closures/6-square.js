@@ -1,24 +1,18 @@
-// square.js
+const Rectangle = require('./5-square');
 
-const BaseSquare = require('./5-square'); // Import the base Square class
-
-class Square extends BaseSquare {
+class Square extends Rectangle {
   constructor(size) {
-    super(size); // Call the constructor of the base class (BaseSquare)
+    super(size, size);
   }
 
   charPrint(c) {
     if (c === undefined) {
-      c = 'X'; // Use 'X' as the default character
+      c = 'X';
     }
-else {
 
-    for (let i = 0; i < this.size; i++) {
-        for(let j = 0; j< this.size; j++){
-      console.log(c);
-        }
+    for (let i = 0; i < this.height; i++) {
+      console.log(c.repeat(this.width));
     }
-}
   }
 }
 
