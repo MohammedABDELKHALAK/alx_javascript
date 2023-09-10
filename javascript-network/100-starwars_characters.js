@@ -1,38 +1,28 @@
+// Import the 'request' module
 const request = require('request');
 
-const movieId = process.argv[2]; // Get the movie ID from the command line arguments
+// Get the movie ID from the command line arguments
+const movieId = process.argv[2];
 
-if (!movieId) {
-  console.log('Please provide a valid movie ID.');
-  process.exit(1);
-}
-
+// Define the URL for the Star Wars API
 const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
 
+// Make a GET request to the API
 request(apiUrl, (error, response, body) => {
-  if (error) {
-    console.error('Error:', error);
-    return;
-  }
+  if (!error && response.statusCode === 200) {
+    const movieData = JSON.parse(body);
+    const characters = movieData.characters;
 
-  if (response.statusCode !== 200) {
-    console.error(`Request failed with status code ${response.statusCode}`);
-    return;
-  }
-
-  const movieData = JSON.parse(body);
-  const characters = movieData.characters;
-
-  if (characters.length === 0) {
-    console.log('No characters found for this movie.');
-  } else {
+    // Print each character name
     characters.forEach((characterUrl) => {
-      request(characterUrl, (charError, charResponse, charBody) => {
-        if (!charError && charResponse.statusCode === 200) {
-          const characterData = JSON.parse(charBody);
+      request(characterUrl, (error, response, characterBody) => {
+        if (!error && response.statusCode === 200) {
+          const characterData = JSON.parse(characterBody);
           console.log(characterData.name);
         }
       });
     });
+  } else {
+    console.error('Error:', error);
   }
 });

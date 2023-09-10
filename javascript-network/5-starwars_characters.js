@@ -1,28 +1,28 @@
-#!/usr/bin/node
-const exec = require('child_process').exec;
+// Import the 'request' module
+const request = require('request');
 
-let child = exec("timeout 40s ./100-starwars_characters.js 5", function(error, stdout, stderr) {
-  if (error) console.log(error);
-  listCharacters = ["Anakin Skywalker", "Owen Lars", "R2-D2", "Beru Whitesun lars", "Yoda", "Obi-Wan Kenobi", "Jar Jar Binks", "Palpatine", "C-3PO", "Boba Fett", "Nute Gunray", "Ayla Secura", "Shmi Skywalker", "Kit Fisto", "Watto", "Mace Windu", "Ki-Adi-Mundi", "Poggle the Lesser", "Cliegg Lars", "Gregar Typho", "Plo Koon", "Barriss Offee", "CordÃ©", "Mas Amedda", "DormÃ©", "Luminara Unduli", "Jocasta Nu", "Dooku", "Bail Prestor Organa", "Jango Fett", "Zam Wesell", "Dexter Jettster", "Lama Su", "Taun We", "R4-P17", "Sly Moore", "PadmÃ© Amidala", "Shaak Ti", "San Hill", "Wat Tambor"];
-  nbCharacters = listCharacters.length;
-  listCharactersFound = [];
-  
-  stdoutLines = stdout.split("\n");
-  for (let index = 0; index < stdoutLines.length; index++) {
-      let line = stdoutLines[index];
-      let idxItem = listCharacters.indexOf(line);
-      if (idxItem >= 0) {
-        listCharactersFound.push(line);
-        listCharacters.splice(idxItem, 1);
-      }
-  }
+// Get the movie ID from the command line arguments
+const movieId = process.argv[2];
 
-  if ((nbCharacters == listCharactersFound.length) && (listCharacters.length == 0)) {
-    process.stdout.write("OK");
-  }
-  else {
-    console.log("Missing some characters");
-    console.log(listCharactersFound);
-    console.log(listCharacters);
+// Define the URL for the Star Wars API
+const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+
+// Make a GET request to the API
+request(apiUrl, (error, response, body) => {
+  if (!error && response.statusCode === 200) {
+    const movieData = JSON.parse(body);
+    const characters = movieData.characters;
+
+    // Print each character name
+    characters.forEach((characterUrl) => {
+      request(characterUrl, (error, response, characterBody) => {
+        if (!error && response.statusCode === 200) {
+          const characterData = JSON.parse(characterBody);
+          console.log(characterData.name);
+        }
+      });
+    });
+  } else {
+    console.error('Error:', error);
   }
 });
