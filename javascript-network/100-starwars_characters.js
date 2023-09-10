@@ -1,28 +1,38 @@
-#!/usr/bin/node
-const exec = require('child_process').exec;
+const request = require('request');
 
-let child = exec("timeout 40s ./100-starwars_characters.js 5", function(error, stdout, stderr) {
-  if (error) console.log(error);
-  listCharacters = ["Anakin Skywalker", "Owen Lars", "R2-D2", "Beru Whitesun lars", "Yoda", "Obi-Wan Kenobi", "Jar Jar Binks", "Palpatine", "C-3PO", "Boba Fett", "Nute Gunray", "Ayla Secura", "Shmi Skywalker", "Kit Fisto", "Watto", "Mace Windu", "Ki-Adi-Mundi", "Poggle the Lesser", "Cliegg Lars", "Gregar Typho", "Plo Koon", "Barriss Offee", "CordÃ©", "Mas Amedda", "DormÃ©", "Luminara Unduli", "Jocasta Nu", "Dooku", "Bail Prestor Organa", "Jango Fett", "Zam Wesell", "Dexter Jettster", "Lama Su", "Taun We", "R4-P17", "Sly Moore", "PadmÃ© Amidala", "Shaak Ti", "San Hill", "Wat Tambor"];
-  nbCharacters = listCharacters.length;
-  listCharactersFound = [];
-  
-  stdoutLines = stdout.split("\n");
-  for (let index = 0; index < stdoutLines.length; index++) {
-      let line = stdoutLines[index];
-      let idxItem = listCharacters.indexOf(line);
-      if (idxItem >= 0) {
-        listCharactersFound.push(line);
-        listCharacters.splice(idxItem, 1);
-      }
+const movieId = process.argv[2]; // Get the movie ID from the command line arguments
+
+if (!movieId) {
+  console.log('Please provide a valid movie ID.');
+  process.exit(1);
+}
+
+const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+
+request(apiUrl, (error, response, body) => {
+  if (error) {
+    console.error('Error:', error);
+    return;
   }
 
-  if ((nbCharacters == listCharactersFound.length) && (listCharacters.length == 0)) {
-    process.stdout.write("OK");
+  if (response.statusCode !== 200) {
+    console.error(`Request failed with status code ${response.statusCode}`);
+    return;
   }
-  else {
-    console.log("Missing some characters");
-    console.log(listCharactersFound);
-    console.log(listCharacters);
+
+  const movieData = JSON.parse(body);
+  const characters = movieData.characters;
+
+  if (characters.length === 0) {
+    console.log('No characters found for this movie.');
+  } else {
+    characters.forEach((characterUrl) => {
+      request(characterUrl, (charError, charResponse, charBody) => {
+        if (!charError && charResponse.statusCode === 200) {
+          const characterData = JSON.parse(charBody);
+          console.log(characterData.name);
+        }
+      });
+    });
   }
 });
