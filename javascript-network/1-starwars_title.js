@@ -1,15 +1,14 @@
 const request = require('request');
 
-// Check if the movie ID is provided as a command line argument
-if (process.argv.length !== 3) {
-  console.error('Usage: node get_sw_movie_title.js <movie ID>');
-  process.exit(1);
-}
-
 // Get the movie ID from the command line argument
 const movieId = process.argv[2];
 
-// Construct the URL with the provided movie ID
+if (!movieId) {
+  console.error('Please provide a Movie ID as the first argument.');
+  process.exit(1);
+}
+
+// Define the Star Wars API URL
 const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
 
 // Perform a GET request to the Star Wars API
@@ -28,5 +27,5 @@ request.get(apiUrl, (error, response, body) => {
   const movieData = JSON.parse(body);
 
   // Print the movie title
-  console.log(`Title: ${movieData.title}`);
+  console.log(movieData.title);
 });

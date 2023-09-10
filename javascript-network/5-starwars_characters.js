@@ -1,17 +1,17 @@
 const request = require('request');
 
-// Define the Movie ID (e.g., 3 for "Return of the Jedi")
+// Get the movie ID from the command line arguments
 const movieId = process.argv[2];
 
 if (!movieId) {
-  console.error('Please provide a Movie ID as the first argument.');
+  console.error('Please provide a movie ID as an argument.');
   process.exit(1);
 }
 
-// Define the Star Wars API URL
+// Define the Star Wars API endpoint
 const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
 
-// Perform a GET request to the Star Wars API
+// Make a GET request to the API URL
 request.get(apiUrl, (error, response, body) => {
   if (error) {
     console.error('Error:', error.message);
@@ -19,27 +19,25 @@ request.get(apiUrl, (error, response, body) => {
   }
 
   if (response.statusCode !== 200) {
-    console.error('API request failed with status code:', response.statusCode);
+    console.error('HTTP request failed with status code:', response.statusCode);
     process.exit(1);
   }
 
   // Parse the JSON response
-  const movieData = JSON.parse(body);
+  const movie = JSON.parse(body);
 
-  if (!movieData.characters || movieData.characters.length === 0) {
-    console.log('No characters found for this movie.');
-    process.exit(0);
-  }
-
-  // Fetch and print character names
-  console.log(`Characters in "${movieData.title}":`);
-  movieData.characters.forEach((characterUrl) => {
+  // Print the characters
+  movie.characters.forEach((characterUrl) => {
+    // Make a GET request to the character URL
     request.get(characterUrl, (charError, charResponse, charBody) => {
       if (charError) {
-        console.error('Error fetching character:', charError.message);
+        console.error('Error:', charError.message);
+      } else if (charResponse.statusCode !== 200) {
+        console.error('HTTP request failed with status code:', charResponse.statusCode);
       } else {
-        const characterData = JSON.parse(charBody);
-        console.log(characterData.name);
+        // Parse the character JSON response
+        const character = JSON.parse(charBody);
+        console.log(character.name);
       }
     });
   });
