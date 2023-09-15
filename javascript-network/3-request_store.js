@@ -1,13 +1,20 @@
 const request = require('request');
 const fs = require('fs');
+const utf8 = require('utf8');
 
-const url = 'http://localhost:5050/route_0'; // Change the URL as needed
-const outputFilePath = 'w_file_0.txt'; // Change the file name as needed
+// Check if the URL and file path are provided as command line arguments
+if (process.argv.length < 4) {
+  console.error('Usage: node 3-request_store.js <URL> <file-path>');
+  process.exit(1);
+}
 
-// Perform an HTTP GET request
-request.get(url, (error, response, body) => {
+const url = process.argv[2];
+const filePath = process.argv[3];
+
+// Make a GET request to the specified URL
+request(url, (error, response, body) => {
   if (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.message);
     process.exit(1);
   }
 
@@ -17,12 +24,12 @@ request.get(url, (error, response, body) => {
   }
 
   // Write the response body to the specified file
-  fs.writeFile(outputFilePath, body, 'utf-8', (err) => {
+  fs.writeFile(filePath, utf8.encode(body), 'utf8', (err) => {
     if (err) {
-      console.error('Error writing to file:', err);
+      console.error('Error writing to file:', err.message);
       process.exit(1);
     }
 
-    console.log(`Successfully saved the content from ${url} to ${outputFilePath}`);
+    console.log(`Successfully saved the content from ${url} to ${filePath}`);
   });
 });
