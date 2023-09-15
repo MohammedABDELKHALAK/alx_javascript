@@ -12,7 +12,7 @@ if (!apiUrl) {
 const characterId = 18;
 
 // Perform a GET request to the Star Wars API
-request(apiUrl, (error, response, body) => {
+request.get(apiUrl, (error, response, body) => {
   if (error) {
     console.error('Error:', error.message);
     process.exit(1);
@@ -26,6 +26,9 @@ request(apiUrl, (error, response, body) => {
   // Parse the JSON response
   const filmsData = JSON.parse(body);
 
+  // Debug: Print the entire filmsData to see its structure
+  console.log(filmsData);
+
   // Initialize a counter for films with Wedge Antilles
   let filmsWithWedgeAntillesCount = 0;
 
@@ -35,6 +38,10 @@ request(apiUrl, (error, response, body) => {
       filmsWithWedgeAntillesCount++;
     }
   }
+
+  // Debug: Print the count and the list of films
+  console.log('Count:', filmsWithWedgeAntillesCount);
+  console.log('Films:', filmsData.results);
 
   // Print the number of films with Wedge Antilles
   console.log(filmsWithWedgeAntillesCount);
