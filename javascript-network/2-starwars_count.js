@@ -9,7 +9,7 @@ if (!apiUrl) {
 }
 
 // Define the character ID for Wedge Antilles
-const characterId = 10;
+const characterId = 18;
 
 // Perform a GET request to the Star Wars API
 request.get(apiUrl, (error, response, body) => {
