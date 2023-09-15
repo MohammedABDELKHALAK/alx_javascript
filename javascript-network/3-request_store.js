@@ -1,34 +1,35 @@
-// Import the 'axios' module
-const axios = require('axios');
+const request = require('request');
+const fs = require('fs');
+const utf8 = require('utf8');
 
-// Get the movie ID from the command line arguments
-const movieId = process.argv[2];
+// Check if the URL and file path are provided as command line arguments
+if (process.argv.length < 4) {
+  console.error('Usage: node 3-request_store.js <URL> <file-path>');
+  process.exit(1);
+}
 
-// Define the URL for the Star Wars API
-const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+const url = process.argv[2];
+const filePath = process.argv[3];
 
-// Make a GET request to the API using axios
-axios.get(apiUrl)
-  .then((response) => {
-    const movieData = response.data;
-    const characterUrls = movieData.characters;
+// Make a GET request to the specified URL
+request(url, (error, response, body) => {
+  if (error) {
+    console.error('Error:', error.message);
+    process.exit(1);
+  }
 
-    // Function to fetch character names and print them
-    const fetchAndPrintCharacters = async () => {
-      for (const characterUrl of characterUrls) {
-        try {
-          const characterResponse = await axios.get(characterUrl);
-          const characterData = characterResponse.data;
-          console.log(characterData.name);
-        } catch (error) {
-          console.error('Error fetching character data:', error.message);
-        }
-      }
-    };
+  if (response.statusCode !== 200) {
+    console.error('HTTP request failed with status code:', response.statusCode);
+    process.exit(1);
+  }
 
-    // Call the function to fetch and print characters
-    fetchAndPrintCharacters();
-  })
-  .catch((error) => {
-    console.error('Error fetching movie data:', error.message);
+  // Write the response body to the specified file
+  fs.writeFile(filePath, utf8.encode(body), 'utf8', (err) => {
+    if (err) {
+      console.error('Error writing to file:', err.message);
+      process.exit(1);
+    }
+
+    console.log(`Successfully saved the content from ${url} to ${filePath}`);
   });
+});
