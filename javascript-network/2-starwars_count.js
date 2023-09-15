@@ -31,7 +31,7 @@ request.get(apiUrl, (error, response, body) => {
 
   // Use a loop to iterate through the films and check if Wedge Antilles is present
   for (const film of filmsData.results) {
-    if (film.characters.includes(`https://swapi-api.alx-tools.com/api/people/${characterId}`)) {
+    if (film.characters.includes(`https://swapi-api.alx-tools.com/api/people/${characterId}/`)) {
       filmsWithWedgeAntillesCount++;
     }
   }
