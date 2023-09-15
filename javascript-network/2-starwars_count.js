@@ -12,7 +12,7 @@ if (!apiUrl) {
 const characterId = 18;
 
 // Perform a GET request to the Star Wars API
-request.get(apiUrl, (error, response, body) => {
+request(apiUrl, (error, response, body) => {
   if (error) {
     console.error('Error:', error.message);
     process.exit(1);
