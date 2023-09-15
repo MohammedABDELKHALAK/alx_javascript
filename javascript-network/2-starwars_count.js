@@ -26,16 +26,11 @@ request.get(apiUrl, (error, response, body) => {
   // Parse the JSON response
   const filmsData = JSON.parse(body);
 
-  // Initialize a counter for films with Wedge Antilles
-  let filmsWithWedgeAntillesCount = 0;
-
-  // Use a loop to iterate through the films and check if Wedge Antilles is present
-  for (const film of filmsData.results) {
-    if (film.characters.includes(`https://swapi-api.alx-tools.com/api/people/${characterId}/`)) {
-      filmsWithWedgeAntillesCount++;
-    }
-  }
+  // Filter the films where Wedge Antilles is present
+  const filmsWithWedgeAntilles = filmsData.results.filter((film) =>
+    film.characters.includes(`https://swapi-api.alx-tools.com/api/people/${characterId}/`)
+  );
 
   // Print the number of films with Wedge Antilles
-  console.log(filmsWithWedgeAntillesCount);
+  console.log(filmsWithWedgeAntilles.length);
 });
